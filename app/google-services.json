@@ -1,0 +1,161 @@
+{
+  "project_info": {
+    "project_number": "121928780565",
+    "firebase_url": "https://newagent-74778.firebaseio.com",
+    "project_id": "newagent-74778",
+    "storage_bucket": "newagent-74778.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121928780565:android:9c6a5a9766e5bf9b",
+        "android_client_info": {
+          "package_name": "net.juanfrancisco.blog.chatfinal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121928780565-dshu0uru8t61bscr09fbnn2stlkdp3pc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.juanfrancisco.blog.chatfinal",
+            "certificate_hash": "99e046f795606219f69557767e12d0f3913e26ee"
+          }
+        },
+        {
+          "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA735A-B1KjYV7sqKsDSnlLKObCguCXB20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121928780565:android:1e51fee9dfa0ee05",
+        "android_client_info": {
+          "package_name": "com.twilio.chat.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA735A-B1KjYV7sqKsDSnlLKObCguCXB20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121928780565:android:dc25037c650381a6",
+        "android_client_info": {
+          "package_name": "com.twilio.chat.demo.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121928780565-qaoudi5uc9bj7jlnjlmahodoncmfeu2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.twilio.chat.demo.debug",
+            "certificate_hash": "99e046f795606219f69557767e12d0f3913e26ee"
+          }
+        },
+        {
+          "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA735A-B1KjYV7sqKsDSnlLKObCguCXB20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121928780565:android:556254cb1f1e5a48",
+        "android_client_info": {
+          "package_name": "com.thesis.smukov.anative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121928780565-fkg5d52ch3jcrnj4c39tvpuadcnriktf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA735A-B1KjYV7sqKsDSnlLKObCguCXB20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
