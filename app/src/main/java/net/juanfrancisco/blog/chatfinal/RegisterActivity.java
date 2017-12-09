@@ -43,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity  implements AuthContract
     TextInputEditText edtPassword;
     @BindView(R.id.btnVolver)
     Button btnVolver;
+
+
     @BindView(R.id.btnRegistrar)
     Button btnRegistrar;
 
@@ -55,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity  implements AuthContract
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
 
