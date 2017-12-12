@@ -14,11 +14,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
+
+import net.juanfrancisco.blog.chatfinal.users.User;
 
 import java.util.List;
 
@@ -52,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity  implements AuthContract
 
 
     private FirebaseAuth auth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity  implements AuthContract
 
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
 
         validator = new Validator(this);
@@ -127,9 +135,24 @@ public class RegisterActivity extends AppCompatActivity  implements AuthContract
         final String password = this.edtPassword.getText().toString();
 
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>()
+                {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        FirebaseUser firebaseUser = task.getResult().getUser();
+                        User user= new User();
+                        user.setId(firebaseUser.getUid());
+                        user.setEmail(firebaseUser.getEmail());
+                        user.setPassword(null);
+
+
+                        mDatabase.child("users").child(user.getId()).setValue(user);
+
+
+
+
                         Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
 
                         if (!task.isSuccessful())

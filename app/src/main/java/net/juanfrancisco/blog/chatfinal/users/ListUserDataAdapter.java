@@ -2,8 +2,12 @@ package net.juanfrancisco.blog.chatfinal.users;
 
 
 import android.content.Context;
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import net.juanfrancisco.blog.chatfinal.ChatActivity;
@@ -22,12 +28,20 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapter.ViewHolder>
 {
-    private ArrayList<AndroidVersion> android_versions;
+    private ArrayList<User> databseUsers;
     private Context context;
 
-    public ListUserDataAdapter(Context context, ArrayList<AndroidVersion> android_versions) {
+    public  FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
+
+    public ListUserDataAdapter(Context context, ArrayList<User> android_versions) {
         this.context = context;
-        this.android_versions = android_versions;
+
+        mAuth = FirebaseAuth.getInstance();
+        this.currentUser = mAuth.getCurrentUser();
+
+        this.databseUsers = android_versions;
+
 
     }
 
@@ -41,24 +55,30 @@ public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapte
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
 
-        viewHolder.tv_android.setText(android_versions.get(i).getAndroid_version_name());
+        viewHolder.tv_android.setText(databseUsers.get(i).getEmail());
+
+
+        viewHolder.edtUIdUser.setText(databseUsers.get(i).getId());
 
 
 
-        Picasso.with(context).load(android_versions.get(i).getAndroid_image_url()).resize(115, 68).transform(new RoundedCornersTransformation(115, 0,
+        Picasso.with(context).load(databseUsers.get(i).getUrl_image()).resize(115, 68).transform(new RoundedCornersTransformation(115, 0,
             RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.img_android);
 
-        //Picasso.with(context).load(android_versions.get(i).getAndroid_image_url()).resize(115, 68).into(viewHolder.img_android);
+        //Picasso.with(context).load(databseUsers.get(i).getAndroid_image_url()).resize(115, 68).into(viewHolder.img_android);
     }
 
     @Override
     public int getItemCount() {
-        return android_versions.size();
+        return databseUsers.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView tv_android;
+        TextView edtUIdUser;
+
+
         ImageView img_android;
         public ViewHolder(View view)
         {
@@ -67,6 +87,8 @@ public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapte
             tv_android = (TextView)view.findViewById(R.id.tv_android);
             img_android = (ImageView)view.findViewById(R.id.img_android);
 
+            edtUIdUser=(TextView)view.findViewById(R.id.edtUIdUser);
+
 
             ImageButton imgbtnChatear = (ImageButton) view.findViewById(R.id.imgbtnChatear);
 
@@ -74,16 +96,25 @@ public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapte
                 @Override
                 public void onClick(View view)
                 {
-                   // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                     //       .setAction("Action", null).show();
-
-                    //view.getContext().startActivity(new Intent(this, RegisterActivity.class));
-                    //view.getContext().finish();
 
 
+                    AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                    //this.getApplicationContext()
+                    Fragment fragment= ChatActivity.getInstance(currentUser,edtUIdUser.getText().toString());
 
-                    Intent intent = new Intent(context,ChatActivity.class);
-                    context.startActivity(intent);
+                    Log.d("el user id",currentUser.getUid().toString());
+
+
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_frame, fragment);
+
+                        //fragmentTransaction.addToBackStack(null);
+
+                    fragmentTransaction.commit();
+                    //Intent intent = new Intent(context,ChatActivity.class);
+                    //context.startActivity(intent);
+
 
 
                 }
