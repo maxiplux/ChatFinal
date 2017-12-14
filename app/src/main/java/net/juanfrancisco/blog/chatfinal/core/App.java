@@ -17,11 +17,11 @@ import android.content.SharedPreferences;
 public class App extends Application {
 
     public static App INSTANCE;
-    private static final String DATABASE_NAME = "MyDatabase";
+    private static final String DATABASE_NAME = "AppDatabase";
     private static final String PREFERENCES = "RoomDemo.preferences";
     private static final String KEY_FORCE_UPDATE = "force_update";
 
-    private MyDatabase database;
+    private AppDatabase database;
 
     public static App get() {
         return INSTANCE;
@@ -32,14 +32,14 @@ public class App extends Application {
         super.onCreate();
 
         // create database
-        database = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, DATABASE_NAME)
-                .addMigrations(MyDatabase.MIGRATION_1_2)
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, DATABASE_NAME)
+                .addMigrations(AppDatabase.MIGRATION_1_2)
                 .build();
 
         INSTANCE = this;
     }
 
-    public MyDatabase getDB() {
+    public AppDatabase getDB() {
         return database;
     }
 

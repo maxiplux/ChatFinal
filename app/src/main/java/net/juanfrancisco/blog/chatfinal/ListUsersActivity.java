@@ -2,27 +2,25 @@ package net.juanfrancisco.blog.chatfinal;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import net.juanfrancisco.blog.chatfinal.core.ChatRoom;
+import net.juanfrancisco.blog.chatfinal.core.ChatRoomRepository;
 import net.juanfrancisco.blog.chatfinal.users.ListUserDataAdapter;
-import net.juanfrancisco.blog.chatfinal.users.User;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class ListUsersActivity extends Fragment
 {
@@ -48,19 +46,54 @@ public class ListUsersActivity extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_listusers, container, false);
-        initViews(view);
+
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            // No user is signed in
-        } else {
-            // User logged in
+
+            startActivity(new Intent(this.getContext(), LoginActivity.class));
+
         }
 
         if (this.view_context==null)
         {
             this.view_context=view.getContext();
         }
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params)
+            {
+                if (ChatRoomRepository.getAll().size()!=0)
+                {
+                    ChatRoom chat1= new ChatRoom("AOciSjjnBEZJfX5Kga43cSYdZX83", "WdBEobU3woeBkaYig9QbpjDugX32","franciscomosquera@outlook.com");
+                    ChatRoom chat2= new ChatRoom( "WdBEobU3woeBkaYig9QbpjDugX32","AOciSjjnBEZJfX5Kga43cSYdZX83","maxiplux@gmail.com");
+
+
+                    ChatRoomRepository.insert(chat1);
+                    ChatRoomRepository.insert(chat2);
+
+
+                }
+
+                return "ok";
+            }
+
+
+        }.execute();
+
+        initViews(view);
+
+
+
+
+
+
+
+
+
+
+
 
         return view;
 
@@ -74,6 +107,39 @@ public class ListUsersActivity extends Fragment
 
     private void initViews(final View view){
 
+        Log.d("test","vamos firebase");
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
+                recyclerView.setHasFixedSize(true);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext().getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+
+                ArrayList<ChatRoom> databaseUsers =  (ArrayList<ChatRoom>) ChatRoomRepository.getAll();
+                Log.d("test", String.valueOf(databaseUsers.size()));
+//                ChatRoom chat1= new ChatRoom("AOciSjjnBEZJfX5Kga43cSYdZX83", "WdBEobU3woeBkaYig9QbpjDugX32","franciscomosquera@outlook.com");
+//                ChatRoom chat2= new ChatRoom( "WdBEobU3woeBkaYig9QbpjDugX32","AOciSjjnBEZJfX5Kga43cSYdZX83","maxiplux@gmail.com");
+//                databaseUsers.add(chat1);
+//                databaseUsers.add(chat2);
+                ListUserDataAdapter adapter = new ListUserDataAdapter(getActivity().getApplicationContext(),databaseUsers);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+       /* Log.d("test","vamos firebase");
+
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -85,6 +151,7 @@ public class ListUsersActivity extends Fragment
                         //Get map of users in datasnapshot
 
                         ArrayList<User> list_users=new ArrayList<>() ;
+
                         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
                         recyclerView.setHasFixedSize(true);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext().getApplicationContext());
@@ -92,31 +159,16 @@ public class ListUsersActivity extends Fragment
 
                         Map<String,Object> raw_object= (Map<String, Object>) dataSnapshot.getValue();
 
-                        for (Map.Entry<String, Object> entry : raw_object.entrySet()){
 
-                            //Get user map
-                            Map singleUser = (Map) entry.getValue();
-                            //Get phone field and append to list
+                        ChatRoom chat1= new ChatRoom("AOciSjjnBEZJfX5Kga43cSYdZX83", "WdBEobU3woeBkaYig9QbpjDugX32","franciscomosquera@outlook.com");
+                        ChatRoom chat2= new ChatRoom( "WdBEobU3woeBkaYig9QbpjDugX32","AOciSjjnBEZJfX5Kga43cSYdZX83","maxiplux@gmail.com");
 
-
-
-
-                            User new_user=new User();
-                            new_user.setEmail(singleUser.get("email").toString());
-                            new_user.setId(singleUser.get("id").toString());
-                            new_user.setUrl_image("https://loremflickr.com/320/240?random=1");
-
-
-
-                            list_users.add(new_user);
-
-
-
-                        }
-
-                        ArrayList<User> databaseUsers = list_users;
+                        ArrayList<ChatRoom> databaseUsers = new ArrayList<>();
+                        databaseUsers.add(chat1);
+                        databaseUsers.add(chat2);
                         ListUserDataAdapter adapter = new ListUserDataAdapter(view.getContext().getApplicationContext(),databaseUsers);
                         recyclerView.setAdapter(adapter);
+                        Log.d("test",chat1.toString());
 
 
                     }
@@ -125,15 +177,16 @@ public class ListUsersActivity extends Fragment
                     public void onCancelled(DatabaseError databaseError)
                     {
                         //handle databaseError
+
+                        Log.d("test", databaseError.getDetails());
                     }
-                });
+                });*/
+
 
 
 
 
     }
-
-
 
 
 

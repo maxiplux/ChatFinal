@@ -3,6 +3,8 @@ package net.juanfrancisco.blog.chatfinal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +15,18 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 
 import net.juanfrancisco.blog.chatfinal.core.ChatMessage;
+import net.juanfrancisco.blog.chatfinal.core.ChatMessageRepository;
+import net.juanfrancisco.blog.chatfinal.core.ChatRoom;
+import net.juanfrancisco.blog.chatfinal.core.ChatRoomRepository;
 import net.juanfrancisco.blog.chatfinal.core.MessageAdapter;
+import net.juanfrancisco.blog.chatfinal.users.ListUserDataAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ChatActivity extends Fragment {
 
@@ -39,13 +39,13 @@ public class ChatActivity extends Fragment {
     public FirebaseUser currentUser;
     private DatabaseReference mDatabase;
 
-    public String  idReceiver;
-    public String  idChat;
+    private ChatRoom chat_room;
 
 
-    public static ChatActivity getInstance(FirebaseUser currentUser,String idReceiver ) {
 
-        return new ChatActivity( currentUser,idReceiver);
+    public static ChatActivity getInstance(FirebaseUser currentUser,String idReceiver,String friend_email ) {
+
+        return new ChatActivity( currentUser,idReceiver,friend_email);
     }
 
 
@@ -53,11 +53,15 @@ public class ChatActivity extends Fragment {
 
     }
 
-    public ChatActivity (FirebaseUser currentUser,String idReceiver) {
+    public ChatActivity (FirebaseUser currentUser,String idReceiver,String friend_email) {
         this.currentUser=currentUser;
-        this.idReceiver=idReceiver;
 
-        this.idChat="454";//currentUser.getUid()+this.idReceiver;
+
+
+
+        this.chat_room=new ChatRoom(currentUser.getUid(), idReceiver,friend_email);
+
+        chat_room.getFirebaseid();//currentUser.getUid()+this.idReceiver;
 
 
 
@@ -82,18 +86,41 @@ public class ChatActivity extends Fragment {
         listView = (ListView) view.findViewById(R.id.list_msg);
         btnSend = view.findViewById(R.id.btn_chat_send);
         editText = (EditText) view.findViewById(R.id.msg_type);
-
-
-        //set ListView adapter first
         adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
+
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+
+
+                //set ListView adapter first
+
+
+
+                chatMessages.addAll((ArrayList<ChatMessage>) ChatMessageRepository.getAll(chat_room.getFirebaseid() ));
+
+
+                //adapter.notifyDataSetChanged();
+
+
+            }
+        });
+
+
+
+
 
         //event for button SEND
 
 
         // Read from the database
         // mDatabase.child("messages").child(currentUser.getUid()).child(idReceiver).push().setValue(chatMessage); .orderByChild("timestamp")
-        mDatabase.child("messages").child(idChat).orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
+
+
+/*        mDatabase.child("messages").child(idChat).orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -150,43 +177,60 @@ public class ChatActivity extends Fragment {
                 // Failed to read value
                 Log.w("ECHATFIRE", "Failed to read value.", error.toException());
             }
-        });
+        });*/
 
         btnSend.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (editText.getText().toString().trim().equals(""))
-                {
-                    Toast.makeText(view.getContext(), "Please input some text...", Toast.LENGTH_SHORT).show();
-                }
 
-                else
+
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
                     {
-                    //add message to lis
-
-                        Log.d("val son iguales" ,String.valueOf(currentUser.getUid().equals(idReceiver)));
-                        Log.d("val1" ,currentUser.getUid());
-                        Log.d("val2" ,idReceiver);
-
-                        Log.d("enviado" ,editText.getText().toString());
-
-                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), currentUser.getUid().equals(idReceiver),currentUser.getUid(),idReceiver);
-                       // chatMessages.add(chatMessage);
-                       // adapter.notifyDataSetChanged();
-
-                        mDatabase.child("messages").child("454").push().setValue(chatMessage);
-
-                        //mDatabase.child("messages").getRef().push().setValue(chatMessage);
-
-                        chatMessages.add(chatMessage);
-                        adapter.notifyDataSetChanged();
-
-                    editText.setText("");
 
 
-                }
+                        if (editText.getText().toString().trim().equals(""))
+                        {
+                            Toast.makeText(view.getContext(), "Please input some text...", Toast.LENGTH_SHORT).show();
+                        }
+
+                        else
+                        {
+
+
+                            ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), chat_room.getIdSender().equals(chat_room.getIdSender()),chat_room.getIdSender(),chat_room.getIdReceiver());
+
+
+
+
+
+
+
+                            mDatabase.child("rooms").child(chat_room.getFirebaseid()).setValue(chat_room);
+
+
+                            mDatabase.child("messages").child(chat_room.getFirebaseid()).push().setValue(chatMessage);
+
+
+
+
+
+                            chatMessages.add(chatMessage);
+                            ChatMessageRepository.insert(chatMessage);
+                            adapter.notifyDataSetChanged();
+                            editText.setText("");
+
+
+                        }
+
+                    }
+                });
+
+
             }
         });
 
