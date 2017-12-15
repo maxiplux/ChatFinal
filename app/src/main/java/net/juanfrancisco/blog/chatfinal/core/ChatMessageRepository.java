@@ -13,8 +13,11 @@ public class ChatMessageRepository {
 
     public static Long insert(ChatMessage todo) {
         AppDatabase db = AppDatabase.getInstance();
+
         ChatMessageDao chat_room = db.ChatMessageDao();
         return chat_room.insert(todo);
+
+
     }
 
 
@@ -38,6 +41,14 @@ public class ChatMessageRepository {
         AppDatabase db = AppDatabase.getInstance();
         ChatMessageDao todoDao = db.ChatMessageDao();
         return todoDao.getAll(firebaseId);
+    }
+
+    public static ChatMessage findByFirebaseId(String firebaseId)
+
+    {
+        AppDatabase db = AppDatabase.getInstance();
+        ChatMessageDao todoDao = db.ChatMessageDao();
+        return todoDao.findByFirebaseId(firebaseId);
     }
 
     public static List<ChatMessage> getAll()

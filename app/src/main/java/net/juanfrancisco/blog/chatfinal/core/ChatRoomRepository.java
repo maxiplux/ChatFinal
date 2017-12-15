@@ -1,5 +1,7 @@
 package net.juanfrancisco.blog.chatfinal.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,12 +14,26 @@ public class ChatRoomRepository {
     public ChatRoomRepository() {
     }
 
-    public static Long insert(ChatRoom todo) {
+    public static Long insert(ChatRoom todo)
+    {
         AppDatabase db = AppDatabase.getInstance();
         ChatRoomDao chat_room = db.ChatRoomDao();
-        return chat_room.insert(todo);
+        if(ChatRoomRepository.findByFirebaseId(todo.getFirebaseid())==null)
+        {
+            return chat_room.insert(todo);
+
+        }
+        return Long.valueOf(0);
+
     }
 
+
+    public static ChatRoom findByFirebaseId(String findByUid)
+    {
+        AppDatabase db = AppDatabase.getInstance();
+        ChatRoomDao todoDao = db.ChatRoomDao();
+        return todoDao.findByFirebaseId(findByUid);
+    }
 
     public static void update(ChatRoom todo) {
         AppDatabase db = AppDatabase.getInstance();
@@ -38,7 +54,11 @@ public class ChatRoomRepository {
     {
         AppDatabase db = AppDatabase.getInstance();
         ChatRoomDao todoDao = db.ChatRoomDao();
-        return todoDao.getAll();
+        List<ChatRoom> result=todoDao.getAll();
+
+
+        return (null != result ? result: Collections.EMPTY_LIST);
+
     }
 
 }
