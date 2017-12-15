@@ -30,6 +30,9 @@ public interface ChatMessageDao {
     @Query("SELECT * FROM chatmessage WHERE uid = :uid ORDER BY date(timestamp) DESC  LIMIT 1 ")
     ChatMessage findByUid(String uid);
 
+    @Query("SELECT * FROM chatmessage WHERE firebaseId = :firebaseId ORDER BY date(timestamp) DESC  LIMIT 1 ")
+    ChatMessage findByFirebaseId(String firebaseId);
+
     @Insert
     void insertAll(List<ChatMessage> msg);
 

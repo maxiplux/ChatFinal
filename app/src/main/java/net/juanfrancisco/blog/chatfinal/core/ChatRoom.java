@@ -48,9 +48,7 @@ public class ChatRoom {
     @Ignore
     public ChatRoom(String idSender, String idReceiver,String friend_email) {
         this.idSender = idSender;
-
         this.friend_email=friend_email;
-
         this.idReceiver = idReceiver;
         this.firebaseid=this.idSender+this.idReceiver;
         this.uid=0;

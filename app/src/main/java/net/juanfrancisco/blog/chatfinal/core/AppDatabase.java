@@ -36,8 +36,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if(db == null)
         {
             db = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, "todo-app").allowMainThreadQueries().build();
-
+                    AppDatabase.class, "todo-app6").allowMainThreadQueries().build();
             /*db = Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
                     AppDatabase.class).build();*/
         }

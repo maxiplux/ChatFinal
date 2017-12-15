@@ -64,7 +64,8 @@ public class ListUsersActivity extends Fragment
             @Override
             protected String doInBackground(Void... params)
             {
-                if (ChatRoomRepository.getAll().size()!=0)
+                ArrayList<ChatRoom> databaseUsers =  (ArrayList<ChatRoom>) ChatRoomRepository.getAll();
+                if (databaseUsers.size()==0)
                 {
                     ChatRoom chat1= new ChatRoom("AOciSjjnBEZJfX5Kga43cSYdZX83", "WdBEobU3woeBkaYig9QbpjDugX32","franciscomosquera@outlook.com");
                     ChatRoom chat2= new ChatRoom( "WdBEobU3woeBkaYig9QbpjDugX32","AOciSjjnBEZJfX5Kga43cSYdZX83","maxiplux@gmail.com");

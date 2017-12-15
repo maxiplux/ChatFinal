@@ -35,6 +35,9 @@ public interface ChatRoomDao
     void delete(ChatRoom room);
 
 
+    @Query("SELECT * FROM chatroom WHERE firebaseid = :firebaseid LIMIT 1")
+    ChatRoom findByFirebaseId(String firebaseid);
+
     @Query("SELECT * FROM chatroom WHERE uid = :uid LIMIT 1")
     ChatRoom findByUid(String uid);
 
