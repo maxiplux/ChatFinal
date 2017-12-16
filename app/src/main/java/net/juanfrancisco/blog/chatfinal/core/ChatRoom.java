@@ -34,9 +34,20 @@ public class ChatRoom {
     private String idSender="";
 
 
+    public String getIdSender_email() {
+        return idSender_email;
+    }
+
+    public void setIdSender_email(String idSender_email) {
+        this.idSender_email = idSender_email;
+    }
 
     @ColumnInfo
-    private String friend_email="";
+    private String idSender_email ="";
+
+
+    @ColumnInfo
+    private String idReceiver_email ="";
 
     @ColumnInfo
     private String friend_image="";
@@ -46,11 +57,18 @@ public class ChatRoom {
     private String idReceiver="";
 
     @Ignore
-    public ChatRoom(String idSender, String idReceiver,String friend_email) {
+    public ChatRoom(String idSender,String idSender_email, String idReceiver,String idReceiver_email)
+    {
         this.idSender = idSender;
-        this.friend_email=friend_email;
+
+        this.idSender_email=idSender_email;
+
+        this.idReceiver_email = idReceiver_email;
+
         this.idReceiver = idReceiver;
-        this.firebaseid=this.idSender+this.idReceiver;
+
+        this.firebaseid=idSender+idReceiver;
+
         this.uid=0;
         this.friend_image="https://loremflickr.com/320/240?random=1";
     }
@@ -62,9 +80,17 @@ public class ChatRoom {
                 "firebaseid='" + firebaseid + '\'' +
                 ", uid=" + uid +
                 ", idSender='" + idSender + '\'' +
+                ", idSender_email='" + idSender_email + '\'' +
+                ", idReceiver_email='" + idReceiver_email + '\'' +
+                ", friend_image='" + friend_image + '\'' +
                 ", idReceiver='" + idReceiver + '\'' +
                 '}';
     }
+
+
+
+
+
 
     public String getFirebaseid() {
         return firebaseid;
@@ -90,12 +116,12 @@ public class ChatRoom {
         this.idReceiver = idReceiver;
     }
 
-    public String getFriend_email() {
-        return friend_email;
+    public String getIdReceiver_email() {
+        return idReceiver_email;
     }
 
-    public void setFriend_email(String friend_email) {
-        this.friend_email = friend_email;
+    public void setIdReceiver_email(String idReceiver_email) {
+        this.idReceiver_email = idReceiver_email;
     }
 
     public String getFriend_image() {

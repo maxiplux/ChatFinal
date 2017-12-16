@@ -12,14 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,6 +50,12 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View hView =  navigationView.getHeaderView(0);
+        TextView edtCurrentUser = (TextView)hView.findViewById(R.id.edtCurrentUser);
+        edtCurrentUser.setText(mAuth.getCurrentUser().getEmail());
+
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -97,6 +111,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
+            this.gotoInviteUsers();
             // Handle the camera action
         } else if (id == R.id.activity_list_all_users)
         {
@@ -119,6 +134,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void gotoInviteUsers() {
+
+        replaceFragment(InviterFragment.getInstance(this.getApplicationContext()), true);
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Listado de usuarios/Chat");
+        }
+
     }
 
     private void gotoListUsers() {

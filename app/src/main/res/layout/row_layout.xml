@@ -30,22 +30,23 @@
         android:layout_width="230dp"
         android:layout_height="51dp"
         android:layout_marginBottom="8dp"
-        android:text="EESTO ES UNA PRUEBA"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:text="franciscomosquera@outlook.com"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold|italic"
         card_view:layout_constraintBottom_toBottomOf="parent"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintLeft_toLeftOf="parent"
         card_view:layout_constraintRight_toRightOf="parent"
         card_view:layout_constraintStart_toEndOf="@+id/img_android"
         card_view:layout_constraintTop_toTopOf="parent"
-        card_view:layout_constraintVertical_bias="0.265" />
+        card_view:layout_constraintVertical_bias="0.103" />
 
 
     <ImageButton
         android:id="@+id/imgbtnChatear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="92dp"
+        android:layout_height="69dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="16dp"
@@ -53,40 +54,24 @@
         android:layout_marginTop="8dp"
         card_view:layout_constraintBottom_toBottomOf="parent"
         card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintHorizontal_bias="0.974"
+        card_view:layout_constraintHorizontal_bias="0.971"
         card_view:layout_constraintRight_toRightOf="parent"
         card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintTop_toBottomOf="@+id/tv_android"
-        card_view:layout_constraintVertical_bias="0.0"
+        card_view:layout_constraintVertical_bias="0.68"
         card_view:srcCompat="@drawable/ic_chat_black_24dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="268dp"
-        android:layout_marginTop="8dp"
-        card_view:layout_constraintBottom_toBottomOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent"
-        card_view:layout_constraintTop_toBottomOf="@+id/tv_android"
-        card_view:layout_constraintVertical_bias="0.0"
-        card_view:srcCompat="@drawable/ic_voice_chat_black_24dp" />
 
     <EditText
         android:id="@+id/edtUIdUser"
-        android:layout_width="263dp"
-        android:layout_height="38dp"
+        android:layout_width="119dp"
+        android:layout_height="36dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="8dp"
         android:ems="5"
         android:inputType="text"
-        android:visibility="visible"
+        android:visibility="invisible"
         card_view:layout_constraintBottom_toBottomOf="parent"
-        card_view:layout_constraintEnd_toStartOf="@+id/imageButton2"
-        card_view:layout_constraintHorizontal_bias="0.0"
         card_view:layout_constraintLeft_toLeftOf="parent"
         card_view:layout_constraintStart_toStartOf="parent" />
 

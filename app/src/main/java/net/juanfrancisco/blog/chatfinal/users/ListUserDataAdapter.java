@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import net.juanfrancisco.blog.chatfinal.ChatActivity;
 import net.juanfrancisco.blog.chatfinal.R;
 import net.juanfrancisco.blog.chatfinal.core.ChatRoom;
+import net.juanfrancisco.blog.chatfinal.core.ChatRoomRepository;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,16 @@ public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapte
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
 
-        viewHolder.friend_email.setText(databseUsers.get(i).getFriend_email());
+        if (databseUsers.get(i).getIdReceiver_email().equals(mAuth.getCurrentUser().getEmail()))
+        {
+            viewHolder.friend_email.setText(databseUsers.get(i).getIdSender_email());
+
+        }
+        else
+        {
+            viewHolder.friend_email.setText(databseUsers.get(i).getIdReceiver_email());
+        }
+
 
 
         viewHolder.edtUIdUser.setText(databseUsers.get(i).getFirebaseid());
@@ -99,18 +109,13 @@ public class ListUserDataAdapter extends RecyclerView.Adapter<ListUserDataAdapte
 
 
                     AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                    ChatRoom chat_room= ChatRoomRepository.findByFirebaseId(edtUIdUser.getText().toString());
 
-                    Fragment fragment= ChatActivity.getInstance(currentUser,edtUIdUser.getText().toString(),friend_email.getText().toString());
-
-                    //Log.d("el user id",currentUser.getUid().toString());
-
+                    Fragment fragment= ChatActivity.getInstance(chat_room);
 
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.content_frame, fragment);
-
-
-
                     fragmentTransaction.commit();
 
 
