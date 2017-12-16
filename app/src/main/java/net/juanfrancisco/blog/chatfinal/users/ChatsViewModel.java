@@ -87,6 +87,7 @@ public class ChatsViewModel extends ViewModel {
 
 
         //Log.w("num_messages", String.valueOf(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()).size()));
+        //loadRoomsAsync();
         return mListMutableLiveData;
     }
 

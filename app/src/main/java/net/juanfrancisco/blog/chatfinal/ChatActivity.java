@@ -106,6 +106,7 @@ public class ChatActivity extends Fragment {
                     adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
                     //adapter.notifyDataSetChanged();
                     //adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
 
                     listView.setAdapter(adapter);
                     //listView.notify();
@@ -143,7 +144,7 @@ public class ChatActivity extends Fragment {
                                 adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
                                 //listView.setAdapter();
                                 adapter.notifyDataSetChanged();
-                                listView.setAdapter(adapter);
+                                //listView.setAdapter(adapter);
 
 
 
