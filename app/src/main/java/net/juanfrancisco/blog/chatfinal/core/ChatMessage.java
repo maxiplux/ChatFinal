@@ -10,6 +10,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 @Entity
@@ -24,12 +25,25 @@ public class ChatMessage
     private String idSender="";
     @ColumnInfo
     private String idReceiver="";
+    @ColumnInfo
+    private String chatRoomId ="";
 
 
 
 
     @ColumnInfo
     private String firebaseId ="";
+
+    public String getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(String chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
+
+
     @ColumnInfo
     private Date timestamp;
 
@@ -83,7 +97,10 @@ public class ChatMessage
         this.idSender=idSender;
         this.timestamp=new Date();
         this.isMine = isMine;
-        this.firebaseId =this.idSender+this.idReceiver;
+
+        this.chatRoomId =this.idSender+this.idReceiver;
+
+        this.firebaseId = this.idSender+UUID.randomUUID().toString();
     }
 
     public String getContent() {

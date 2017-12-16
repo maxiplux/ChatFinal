@@ -19,8 +19,11 @@ public interface ChatMessageDao {
     @Query("SELECT * FROM chatmessage  ORDER BY date(timestamp) DESC   ")
     List<ChatMessage> getAll() ;
 
-    @Query("SELECT * FROM chatmessage  WHERE firebaseId = :firebaseId ORDER BY date(timestamp) DESC   ")
-    List<ChatMessage> getAll(String firebaseId) ;
+    @Query("SELECT * FROM chatmessage  WHERE chatRoomId = :chatRoomId ORDER BY date(timestamp) DESC   ")
+    List<ChatMessage> getAll(String chatRoomId) ;
+
+    @Query("SELECT * FROM chatmessage WHERE chatRoomId = :chatRoomId ORDER BY date(timestamp) DESC  LIMIT 1 ")
+    ChatMessage findByChatRoomId(String chatRoomId);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

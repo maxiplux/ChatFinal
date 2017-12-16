@@ -1,5 +1,7 @@
 package net.juanfrancisco.blog.chatfinal.core;
 
+import net.juanfrancisco.blog.chatfinal.CoreDb.AppDatabase;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,17 @@ public class ChatMessageRepository {
         AppDatabase db = AppDatabase.getInstance();
 
         ChatMessageDao chat_room = db.ChatMessageDao();
-        return chat_room.insert(todo);
+        if ( ChatMessageRepository.findByFirebaseId(todo.getFirebaseId()) ==null  )
+        {
+            return chat_room.insert(todo);
+
+        }
+        return Long.valueOf(0);
+
+
+
+
+
 
 
     }
@@ -35,12 +47,12 @@ public class ChatMessageRepository {
     }
 
 
-    public static List<ChatMessage> getAll(String firebaseId)
+    public static List<ChatMessage> getAll(String ChatRoomId)
 
     {
         AppDatabase db = AppDatabase.getInstance();
         ChatMessageDao todoDao = db.ChatMessageDao();
-        return todoDao.getAll(firebaseId);
+        return todoDao.getAll(ChatRoomId);
     }
 
     public static ChatMessage findByFirebaseId(String firebaseId)
@@ -49,6 +61,14 @@ public class ChatMessageRepository {
         AppDatabase db = AppDatabase.getInstance();
         ChatMessageDao todoDao = db.ChatMessageDao();
         return todoDao.findByFirebaseId(firebaseId);
+    }
+
+    public static ChatMessage findByChatRoomId(String firebaseId)
+
+    {
+        AppDatabase db = AppDatabase.getInstance();
+        ChatMessageDao todoDao = db.ChatMessageDao();
+        return todoDao.findByChatRoomId(firebaseId);
     }
 
     public static List<ChatMessage> getAll()

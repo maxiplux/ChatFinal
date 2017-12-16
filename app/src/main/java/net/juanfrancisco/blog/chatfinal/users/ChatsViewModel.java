@@ -6,11 +6,11 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import net.juanfrancisco.blog.chatfinal.core.ChatMessage;
 import net.juanfrancisco.blog.chatfinal.core.ChatMessageRepository;
@@ -78,21 +78,15 @@ public class ChatsViewModel extends ViewModel {
         this.current_chat_room=current_chat_room;
 
 
-        if (ChatMessageRepository.insert(chatMessage) !=0)
-        {
-            new_messages = new_messages +1;
-        }
 
 
-        if (new_messages !=0)
-        {
-            mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child("messages").child(current_chat_room.getFirebaseid()).push().setValue(chatMessage);
-            new_messages =0;
-        }
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("messages").child(current_chat_room.getFirebaseid()).push().setValue(chatMessage);
+        mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
 
-        Log.w("num_messages", String.valueOf(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()).size()));
+
+
+        //Log.w("num_messages", String.valueOf(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()).size()));
         return mListMutableLiveData;
     }
 
@@ -108,32 +102,31 @@ public class ChatsViewModel extends ViewModel {
         Log.w("chatFirebaseId", current_chat_room.getFirebaseid());
 
 
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        // Attach a listener to read the data at our posts reference
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                Log.w("caso1", String.valueOf(dataSnapshot.getChildrenCount() ) ) ;
-                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.v("caso11-1",""+ childDataSnapshot.getKey()); //displays the key for the node
-
-                    Log.v("caso11-12",""+ childDataSnapshot.getValue().toString()); //displays the key for the node
-
-                    ChatMessage chatMessage =  childDataSnapshot.getValue(ChatMessage.class);
-                    Log.w("msg", chatMessage.toString());
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for (DataSnapshot chatMessageSnapshot: dataSnapshot.getChildren()) {
+                    ChatMessage chatMessage = chatMessageSnapshot.getValue(ChatMessage.class);
+                    //Log.w("lotengo", chatMessage.toString());
+                    chatMessage.setMine(false);
 
                     if (chatMessage.getIdSender() == mAuth.getCurrentUser().getUid())
                     {
                         chatMessage.setMine(true);
-                    }
-                    {
-                        chatMessage.setMine(false);
+
 
                     }
 
-                    if (ChatMessageRepository.insert(chatMessage) !=0)
+
+                    if ( ChatMessageRepository.insert(chatMessage) !=0)
                     {
                         new_messages = new_messages +1;
+
                     }
+
+
                 }
                 Log.w("msg-count", String.valueOf(new_messages));
 
@@ -150,30 +143,9 @@ public class ChatsViewModel extends ViewModel {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.w("caso2", String.valueOf(dataSnapshot.getChildrenCount() ) ) ;
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.w("caso3", String.valueOf(dataSnapshot.getChildrenCount() ) ) ;
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.w("caso4", String.valueOf(dataSnapshot.getChildrenCount() ) ) ;
-
-            }
-
-            @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("caso5", String.valueOf(databaseError.getDetails() ) ) ;
-
+                System.out.println("The read failed: " + databaseError.getCode());
             }
-
-
         });
     }
 

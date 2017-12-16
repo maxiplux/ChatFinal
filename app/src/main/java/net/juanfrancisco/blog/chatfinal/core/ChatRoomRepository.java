@@ -1,6 +1,7 @@
 package net.juanfrancisco.blog.chatfinal.core;
 
-import java.util.ArrayList;
+import net.juanfrancisco.blog.chatfinal.CoreDb.AppDatabase;
+
 import java.util.Collections;
 import java.util.List;
 

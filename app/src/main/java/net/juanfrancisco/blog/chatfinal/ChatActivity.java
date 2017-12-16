@@ -105,6 +105,7 @@ public class ChatActivity extends Fragment {
                 .observe(this, chatMessages -> {
                     adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
                     //adapter.notifyDataSetChanged();
+                    //adapter.notifyDataSetChanged();
 
                     listView.setAdapter(adapter);
                     //listView.notify();
@@ -128,14 +129,24 @@ public class ChatActivity extends Fragment {
 
                 else
                 {
-                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), true,mAuth.getCurrentUser().getUid(),chat_room.getIdReceiver());
+                    String IdReceiver=chat_room.getIdReceiver();
+
+                    if (mAuth.getCurrentUser().getUid()==IdReceiver)
+                    {
+                        IdReceiver=chat_room.getIdSender();
+                    }
+
+                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), true,mAuth.getCurrentUser().getUid(),IdReceiver);
 
                     model.getChatMessages(chat_room,chatMessage)
                             .observe((LifecycleOwner) currentContext, chatMessages -> {
                                 adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
+                                //listView.setAdapter();
+                                adapter.notifyDataSetChanged();
+                                listView.setAdapter(adapter);
 
-                                //listView.notify();
-                                //adapter.notifyDataSetChanged();
+
+
                                 editText.setText("");
 
                             });

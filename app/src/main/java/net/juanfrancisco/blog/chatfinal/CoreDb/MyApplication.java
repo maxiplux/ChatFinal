@@ -1,10 +1,8 @@
-package net.juanfrancisco.blog.chatfinal;
+package net.juanfrancisco.blog.chatfinal.CoreDb;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.SharedPreferences;
-
-import net.juanfrancisco.blog.chatfinal.core.AppDatabase;
 
 
 /**
