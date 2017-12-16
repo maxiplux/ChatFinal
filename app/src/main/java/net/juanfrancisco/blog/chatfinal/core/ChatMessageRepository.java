@@ -10,19 +10,20 @@ import java.util.List;
 
 public class ChatMessageRepository {
 
-    public ChatMessageRepository() {
+    public ChatMessageRepository()
+    {
+
     }
 
-    public static Long insert(ChatMessage todo) {
+    public static boolean insert(ChatMessage todo) {
         AppDatabase db = AppDatabase.getInstance();
 
-        ChatMessageDao chat_room = db.ChatMessageDao();
-        if ( ChatMessageRepository.findByFirebaseId(todo.getFirebaseId()) ==null  )
-        {
-            return chat_room.insert(todo);
 
-        }
-        return Long.valueOf(0);
+
+        return db.ChatMessageDao().insert(todo)!=0;
+
+
+
 
 
 

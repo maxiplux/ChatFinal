@@ -1,7 +1,6 @@
 package net.juanfrancisco.blog.chatfinal;
 
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -64,13 +63,17 @@ public class ChatActivity extends Fragment {
 
         this.chat_room=chat_room;
 
+
         //chat_room.getFirebaseid();//currentUser.getUid()+this.idReceiver;
 
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-
+        if (this.chat_room.equalSender(mAuth.getCurrentUser().getUid()))
+        {
+            this.chat_room.swap();
+        }
 
 
 
@@ -101,14 +104,17 @@ public class ChatActivity extends Fragment {
 
         model = ViewModelProviders.of(this).get(ChatsViewModel.class);
 
+        adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
+        listView.setAdapter(adapter);
         model.getChatMessages(this.chat_room)
-                .observe(this, chatMessages -> {
-                    adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
+                .observe(this, local_chatMessages -> {
+                    chatMessages.clear();
+                    chatMessages.addAll(local_chatMessages);
+                    //adapter.notifyDataSetChanged();
                     //adapter.notifyDataSetChanged();
                     //adapter.notifyDataSetChanged();
                     adapter.notifyDataSetChanged();
-
-                    listView.setAdapter(adapter);
+                    listView.smoothScrollToPosition(chatMessages.size());
                     //listView.notify();
 
 
@@ -130,29 +136,14 @@ public class ChatActivity extends Fragment {
 
                 else
                 {
-                    String IdReceiver=chat_room.getIdReceiver();
-
-                    if (mAuth.getCurrentUser().getUid()==IdReceiver)
-                    {
-                        IdReceiver=chat_room.getIdSender();
-                    }
-
-                    ChatMessage chatMessage = new ChatMessage(editText.getText().toString(), true,mAuth.getCurrentUser().getUid(),IdReceiver);
-
-                    model.getChatMessages(chat_room,chatMessage)
-                            .observe((LifecycleOwner) currentContext, chatMessages -> {
-                                adapter = new MessageAdapter((Activity) view.getContext(), R.layout.item_chat_left, chatMessages);
-                                //listView.setAdapter();
-                                adapter.notifyDataSetChanged();
-                                //listView.setAdapter(adapter);
 
 
 
-                                editText.setText("");
+                    ChatMessage new_msg = new ChatMessage(editText.getText().toString(), false,chat_room.getIdSender(),chat_room.getIdReceiver());
 
-                            });
-
+                    model.send_menssage(new_msg);
                 }
+                editText.setText("");
 
 
 
@@ -174,10 +165,5 @@ public class ChatActivity extends Fragment {
         super.onDestroyView();
 
     }
-
-
-
-
-
 
 }

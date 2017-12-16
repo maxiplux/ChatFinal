@@ -44,24 +44,21 @@ public class ChatsViewModel extends ViewModel {
             mDatabase = FirebaseDatabase.getInstance().getReference();
         }
 
+
+
         if (this.current_chat_room==null)
         {
             this.current_chat_room=current_chat_room;
         }
 
-        if (this.current_chat_room==null)
+
+        if (mListMutableLiveData == null)
         {
-            this.current_chat_room=current_chat_room;
-        }
-
-
-        if (mListMutableLiveData == null) {
             mListMutableLiveData = new MutableLiveData<>();
-            mListMutableLiveData.setValue(ChatMessageRepository.getAll());
-
-
+            refreshRoom();
+            loadRoomsAsync();
         }
-        loadRoomsAsync();
+
         Log.w("num_messages", String.valueOf(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()).size()));
         return mListMutableLiveData;
     }
@@ -69,20 +66,6 @@ public class ChatsViewModel extends ViewModel {
     public LiveData<List<ChatMessage>> getChatMessages(ChatRoom current_chat_room,ChatMessage chatMessage)
     {
 
-        if (this.mDatabase==null)
-        {
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-        }
-
-
-        this.current_chat_room=current_chat_room;
-
-
-
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("messages").child(current_chat_room.getFirebaseid()).push().setValue(chatMessage);
-        mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
 
 
 
@@ -104,42 +87,30 @@ public class ChatsViewModel extends ViewModel {
 
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener()
+        {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                new_messages=0;
                 for (DataSnapshot chatMessageSnapshot: dataSnapshot.getChildren()) {
                     ChatMessage chatMessage = chatMessageSnapshot.getValue(ChatMessage.class);
-                    //Log.w("lotengo", chatMessage.toString());
-                    chatMessage.setMine(false);
+                    Log.w("lotengo", chatMessage.toString());
+                    chatMessage.setMine(chatMessage.getIdReceiver() == mAuth.getCurrentUser().getUid());
+                    ChatMessageRepository.insert(chatMessage) ;
+                    new_messages=1;
 
-                    if (chatMessage.getIdSender() == mAuth.getCurrentUser().getUid())
-                    {
-                        chatMessage.setMine(true);
-
-
-                    }
-
-
-                    if ( ChatMessageRepository.insert(chatMessage) !=0)
-                    {
-                        new_messages = new_messages +1;
-
-                    }
 
 
                 }
+
                 Log.w("msg-count", String.valueOf(new_messages));
 
-
-                if (new_messages !=0)
+                if (new_messages==1)
                 {
-                    mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
-                    new_messages =0;
+                    refreshRoom();
+
                 }
-
-
-
 
             }
 
@@ -150,6 +121,12 @@ public class ChatsViewModel extends ViewModel {
         });
     }
 
+    private  void refreshRoom()
+    {
+        mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
+    }
+
+
     @Override
     protected void onCleared()
     {
@@ -157,4 +134,21 @@ public class ChatsViewModel extends ViewModel {
         Timber.d("@onCleared called");
     }
 
+    public void send_menssage(ChatMessage chatMessage)
+    {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (this.mDatabase==null)
+        {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+        }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        chatMessage.setMine(chatMessage.getIdReceiver() == mAuth.getCurrentUser().getUid());
+        //ChatMessageRepository.insert(chatMessage) ;
+
+        mDatabase.child("messages").child(current_chat_room.getFirebaseid()).push().setValue(chatMessage);
+        //mListMutableLiveData.setValue(ChatMessageRepository.getAll(current_chat_room.getFirebaseid()));
+
+    }
 }

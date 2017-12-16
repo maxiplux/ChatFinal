@@ -26,7 +26,7 @@ public interface ChatMessageDao {
     ChatMessage findByChatRoomId(String chatRoomId);
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     Long insert(ChatMessage msg);
 
 

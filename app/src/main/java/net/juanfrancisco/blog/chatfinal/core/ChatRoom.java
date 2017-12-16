@@ -56,6 +56,21 @@ public class ChatRoom {
     @ColumnInfo
     private String idReceiver="";
 
+
+    @Ignore
+    public void swap()
+    {
+        String tmp=this.idSender.toString();
+        this.idSender=this.idReceiver.toString();
+        this.idReceiver=tmp;
+    }
+
+    @Ignore
+    public boolean equalSender(String idSender)
+    {
+        return this.idSender==idSender;
+    }
+
     @Ignore
     public ChatRoom(String idSender,String idSender_email, String idReceiver,String idReceiver_email)
     {
