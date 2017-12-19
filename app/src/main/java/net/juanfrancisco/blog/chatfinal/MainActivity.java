@@ -15,19 +15,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import net.juanfrancisco.blog.chatfinal.core.SingletonApplication;
+import net.juanfrancisco.blog.chatfinal.ui.fragments.InviterFragment;
+import net.juanfrancisco.blog.chatfinal.ui.fragments.ListUsersFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private FirebaseAuth mAuth;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,21 +57,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        View hView =  navigationView.getHeaderView(0);
-        TextView edtCurrentUser = (TextView)hView.findViewById(R.id.edtCurrentUser);
-        edtCurrentUser.setText(mAuth.getCurrentUser().getEmail());
+        View hView = navigationView.getHeaderView(0);
+        TextView edtCurrentUser = (TextView) hView.findViewById(R.id.edtCurrentUser);
+        edtCurrentUser.setText(SingletonApplication.getFirbaseUserReference().getCurrentUser().getEmail());
 
 
         navigationView.setNavigationItemSelectedListener(this);
+        this.gotoInviteUsers();
     }
 
-    public void replaceFragment(Fragment fragment, boolean addToBackStack)
-    {
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
-        if(addToBackStack)
-        {
+        if (addToBackStack) {
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
@@ -113,8 +118,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             this.gotoInviteUsers();
             // Handle the camera action
-        } else if (id == R.id.activity_list_all_users)
-        {
+        } else if (id == R.id.activity_list_all_users) {
             this.gotoListUsers();
 
 
@@ -149,13 +153,11 @@ public class MainActivity extends AppCompatActivity
     private void gotoListUsers() {
 
 
-            replaceFragment(ListUsersActivity.getInstance(this.getApplicationContext()), true);
+        replaceFragment(ListUsersFragment.getInstance(this.getApplicationContext()), true);
         // set the toolbar title
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Listado de usuarios/Chat");
         }
-
-
 
 
     }
