@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import net.juanfrancisco.blog.chatfinal.R;
 import net.juanfrancisco.blog.chatfinal.core.SingletonApplication;
@@ -42,6 +42,8 @@ public class ChatFragment extends Fragment {
 
     private ChatRoom chat_room;
     private ChatsViewModel model;
+    private  String idSender="";
+    private  String idReciver ="";
 
     private Context currentContext;
 
@@ -64,8 +66,17 @@ public class ChatFragment extends Fragment {
 
         mDatabase = SingletonApplication.getFirbaseDatabaseReference();
         mAuth = SingletonApplication.getFirbaseUserReference();
+        this.idSender=mAuth.getCurrentUser().getUid();
+        this.idReciver =chat_room.getIdReceiver();
+
         if (this.chat_room.equalSender(mAuth.getCurrentUser().getUid())) {
+
             this.chat_room.swap();
+            this.idReciver =chat_room.getIdSender();
+
+
+
+            //this.idReciver =chat_room.getIdReceiver();
         }
 
 
@@ -119,10 +130,22 @@ public class ChatFragment extends Fragment {
                     Toast.makeText(view.getContext(), "Es necesario definir un mensaje , no puede enviar texto en blanco", Toast.LENGTH_SHORT).show();
                 } else {
 
+                    String IdReciver=chat_room.getIdSender();
 
-                    ChatMessage new_msg = new ChatMessage(editText.getText().toString(), true, chat_room.getIdSender(), chat_room.getIdReceiver());
+                    if(mAuth.getCurrentUser().getUid().equals( IdReciver))
+                    {
+                         IdReciver=chat_room.getIdReceiver();
+
+                    }
+                    Log.d("debug1",chat_room.toString());
+                    Log.d("debug2",mAuth.getCurrentUser().getUid());
+
+                    ChatMessage new_msg = new ChatMessage(editText.getText().toString(), true, idSender, idReciver);
 
                     model.send_menssage(new_msg);
+
+
+
                 }
                 editText.setText("");
                 //adapter.notifyDataSetChanged();

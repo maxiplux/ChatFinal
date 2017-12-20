@@ -40,22 +40,26 @@ public class MessageAdapter extends ArrayAdapter<ChatMessage> {
         int viewType = getItemViewType(position);
 
 
-        layoutResource = R.layout.item_chat_left;
 
 
-        if (!chatMessage.isMine())
+
+        if (chatMessage.isMine())
         {
             layoutResource = R.layout.item_chat_right;
 
+        }
+        else
+        { layoutResource = R.layout.item_chat_left;
 
         }
 
 
 
 
+
             convertView = inflater.inflate(layoutResource, parent, false);
             holder = new ViewHolder(convertView);
-            holder.msg.setText(chatMessage.getContent());
+            holder.msg.setText(String.valueOf(chatMessage.isMine())+"--"+chatMessage.getContent());
 
             convertView.setTag(holder);
 
@@ -79,6 +83,8 @@ public class MessageAdapter extends ArrayAdapter<ChatMessage> {
     @Override
     public int getItemViewType(int position) {
         // return a value between 0 and (getViewTypeCount - 1)
+
+        Log.w("la pos", String.valueOf(position));
         return position % 2;
     }
 

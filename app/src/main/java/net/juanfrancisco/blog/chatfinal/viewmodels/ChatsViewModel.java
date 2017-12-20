@@ -85,16 +85,9 @@ public class ChatsViewModel extends ViewModel {
                 for (DataSnapshot chatMessageSnapshot : dataSnapshot.getChildren()) {
                     ChatMessage chatMessage = chatMessageSnapshot.getValue(ChatMessage.class);
 
-                    if (chatMessage.getIdSender().equals(mAuth.getCurrentUser().getUid()))
-                    {
-                        chatMessage.setMine(true);
+                    chatMessage.setMine(chatMessage.getIdSender().equals(mAuth.getCurrentUser().getUid()));
 
-                    }
 
-                    else
-                    {
-                        chatMessage.setMine(false);
-                    }
 
                     ChatMessageRepository.insert(chatMessage);
                     new_messages = 1;
@@ -130,9 +123,7 @@ public class ChatsViewModel extends ViewModel {
 
     public void send_menssage(ChatMessage chatMessage) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (this.mDatabase == null) {
-            mDatabase = SingletonApplication.getFirbaseDatabaseReference();
-        }
+
 
         mDatabase =SingletonApplication.getFirbaseDatabaseReference();
 

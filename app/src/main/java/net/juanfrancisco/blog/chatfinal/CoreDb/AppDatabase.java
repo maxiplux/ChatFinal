@@ -35,7 +35,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         if (db == null) {
             db = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, "mychat.v1.0.13.sqlite").addMigrations(AppDatabase.MIGRATION_1_2).allowMainThreadQueries().build();
+                    AppDatabase.class, "mychat.v1.0.14.sqlite").addMigrations(AppDatabase.MIGRATION_1_2).allowMainThreadQueries().build();
 
         }
     }
